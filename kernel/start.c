@@ -45,6 +45,10 @@ start()
   int id = r_mhartid();
   w_tp(id);
 
+  //Allow S-mode and U-mode to access physical memory.
+  asm volatile("csrw pmpaddr0, %0" :: "r"((~0ULL) >> 10));
+  asm volatile("csrw pmpcfg0, %0" :: "r"(0x1fUL));
+
   // switch to supervisor mode and jump to main().
   asm volatile("mret");
 }
